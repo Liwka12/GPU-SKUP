@@ -1,0 +1,26 @@
+{
+"name":"GPU BUY - Skup Kart Graficznych",
+
+"short_name":"GPU BUY",
+
+"description":"Kalkulator wyceny kart graficznych NVIDIA i AMD",
+
+"start_url":"index.html",
+
+"display":"standalone",
+
+"background_color":"#050505",
+
+"theme_color":"#008cff",
+
+"icons":[
+
+{
+"src":"assets/favicon.ico",
+"sizes":"64x64",
+"type":"image/x-icon"
+}
+
+]
+
+}

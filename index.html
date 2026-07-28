@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head> <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <meta name="description" content="Skup kart graficznych NVIDIA i AMD. Sprawdź orientacyjną cenę swojej karty RTX, GTX oraz Radeon. Szybka wycena online.">
+
+<meta name="keywords" content="skup kart graficznych, skup GPU, sprzedaż karty graficznej, RTX, GTX, Radeon, NVIDIA, AMD">
+
+<meta name="author" content="GPU BUY">
+
+
+<meta name="robots" content="index, follow">
+
+
+<meta property="og:title" content="GPU BUY - Skup Kart Graficznych">
+
+<meta property="og:description" content="Sprawdź ile jest warta Twoja karta graficzna.">
+
+<meta property="og:type" content="website">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Skup Kart Graficznych - Wycena Online</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+  <div id="loader">
+
+<div class="loader-circle"></div>
+
+<p>
+Ładowanie kalkulatora...
+</p>
+
+</div>
+
+<header>
+    <div class="logo">
+        GPU BUY
+    </div>
+
+    <div class="header-text">
+        Profesjonalna wycena kart graficznych
+    </div>
+</header>
+
+
+<main>
+
+
+<section id="startScreen" class="card">
+
+<h1>
+Skup Kart Graficznych
+</h1>
+
+
+<p>
+Sprawdź orientacyjną cenę odkupu swojej karty graficznej.
+</p>
+
+
+<button onclick="startCalculator()">
+Rozpocznij wycenę
+</button>
+
+
+</section>
+
+
+
+<section id="calculator" class="card hidden">
+
+
+<div class="progress">
+
+<span id="stepCounter">
+Krok 1 z 15
+</span>
+
+<div class="progress-bar">
+
+<div id="progressFill"></div>
+
+</div>
+
+</div>
+
+
+
+<div id="questionArea">
+
+
+<h2 id="questionTitle">
+</h2>
+
+
+<div id="answers">
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="buttons">
+
+<button id="backBtn" onclick="previousStep()">
+← Wstecz
+</button>
+
+
+<button id="nextBtn" onclick="nextStep()">
+Dalej →
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<section id="resultScreen" class="card hidden">
+
+
+<h1>
+Twoja orientacyjna wycena
+</h1>
+
+
+
+<div class="price-box">
+
+<span id="priceResult">
+0 zł - 0 zł
+</span>
+
+
+</div>
+
+
+
+<div class="summary">
+
+<h3>
+Podsumowanie:
+</h3>
+
+
+<div id="summaryText">
+
+</div>
+
+
+</div>
+
+
+
+
+<p class="notice">
+
+Cena jest orientacyjna.
+Ostateczna wycena zależy od rzeczywistego stanu karty podczas oględzin.
+
+</p>
+
+
+
+
+<div class="contact-buttons">
+
+
+<a id="phoneButton" href="#">
+📞 Zadzwoń
+</a>
+
+
+
+<a id="emailButton" href="#">
+✉ Wyślij e-mail
+</a>
+
+
+
+</div>
+
+
+</section>
+
+
+</main>
+
+
+
+
+
+<footer>
+
+
+<p>
+© 2026 GPU BUY - Wszystkie prawa zastrzeżone
+</p>
+
+
+<a href="pages/privacy.html">
+Polityka prywatności
+</a>
+
+
+<a href="pages/rodo.html">
+RODO
+</a>
+
+
+</footer>
+
+
+
+
+
+<script src="config.js"></script>
+
+<script src="gpuDatabase.js"></script>
+
+<script src="priceRules.js"></script>
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
+<link rel="manifest" href="manifest.json">
