@@ -1,53 +1,40 @@
-/* =====================================
- GPU BUY - GŁÓWNY SKRYPT
-===================================== */
+/* =====================================================
+ GPU SKUP - SCRIPT.JS
+ Kalkulator odkupu kart graficznych
+ ===================================================== */
 
 
 let currentStep = 0;
 
 
+
 let answers = {
 
-gpu:null,
-
-state:null,
-
-service:null,
-
-opened:null,
-
-repaired:null,
-
-age:null,
-
-artifacts:null,
-
-warranty:null,
-
-box:null,
-
-fans:null,
-
-coil:null,
-
-usage:null,
-
-moisture:null
+    gpu:null,
+    state:null,
+    service:null,
+    opened:null,
+    repaired:null,
+    age:null,
+    artifacts:null,
+    warranty:null,
+    box:null,
+    fans:null,
+    coil:null,
+    usage:null,
+    moisture:null
 
 };
 
 
 
-
-
-const steps=[
+const questions = [
 
 
 {
 title:"Wybierz model karty graficznej",
 type:"gpu"
 },
-
 
 
 {
@@ -62,7 +49,6 @@ options:[
 
 
 
-
 {
 title:"Czy karta miała kiedyś serwis?",
 key:"service",
@@ -71,7 +57,6 @@ options:[
 ["serviceNo","Nie"]
 ]
 },
-
 
 
 
@@ -86,7 +71,6 @@ options:[
 
 
 
-
 {
 title:"Czy karta była kiedyś naprawiana?",
 key:"repaired",
@@ -95,7 +79,6 @@ options:[
 ["repairedNo","Nie"]
 ]
 },
-
 
 
 
@@ -111,7 +94,6 @@ options:[
 
 
 
-
 {
 title:"Czy karta wyświetla artefakty?",
 key:"artifacts",
@@ -120,7 +102,6 @@ options:[
 ["artifactsNo","Nie"]
 ]
 },
-
 
 
 
@@ -135,7 +116,6 @@ options:[
 
 
 
-
 {
 title:"Czy karta posiada pudełko?",
 key:"box",
@@ -144,7 +124,6 @@ options:[
 ["boxNo","Nie"]
 ]
 },
-
 
 
 
@@ -159,7 +138,6 @@ options:[
 
 
 
-
 {
 title:"Czy karta piszczy cewkami?",
 key:"coil",
@@ -171,17 +149,15 @@ options:[
 
 
 
-
 {
-title:"Do czego była używana karta?",
+title:"Do czego używana była karta?",
 key:"usage",
 options:[
 ["gaming","Granie"],
 ["mining","Kopanie kryptowalut"],
-["work","Praca / AI"]
+["work","Praca"]
 ]
 },
-
 
 
 
@@ -195,10 +171,7 @@ options:[
 }
 
 
-
 ];
-
-
 
 
 
@@ -209,22 +182,15 @@ options:[
 function startCalculator(){
 
 
-document
-.getElementById("startScreen")
-.classList.add("hidden");
+hideElement("startScreen");
 
-
-
-document
-.getElementById("calculator")
-.classList.remove("hidden");
-
+showElement("calculator");
 
 
 currentStep=0;
 
 
-showStep();
+showQuestion();
 
 
 }
@@ -236,90 +202,67 @@ showStep();
 
 
 
+function showQuestion(){
 
 
-function showStep(){
-
-
-
-let step=
-steps[currentStep];
+let q = questions[currentStep];
 
 
 
-document
-.getElementById("questionTitle")
-.innerHTML=
-step.title;
+let title=document.getElementById("questionTitle");
+
+if(title)
+title.innerHTML=q.title;
 
 
 
+let counter=document.getElementById("stepCounter");
 
-document
-.getElementById("stepCounter")
-.innerHTML=
-"Krok "+
-(currentStep+1)
-+
-" / "
-+
-steps.length;
+if(counter)
+counter.innerHTML=
+"Krok "+(currentStep+1)+" / "+questions.length;
 
 
 
+let progress=document.getElementById("progressFill");
 
-
-document
-.getElementById("progressFill")
-.style.width=
-((currentStep+1)
-/steps.length*100)
-+"%";
+if(progress)
+progress.style.width =
+((currentStep+1)/questions.length*100)+"%";
 
 
 
 
+let box=document.getElementById("answers");
+
+if(!box)
+return;
 
 
-let area=
-document.getElementById("answers");
-
-
-area.innerHTML="";
+box.innerHTML="";
 
 
 
 
 
-if(step.type==="gpu"){
+if(q.type==="gpu"){
 
 
-let input=
-document.createElement("input");
+let input=document.createElement("input");
+
+input.className="gpu-search";
+
+input.placeholder="Wpisz np. RTX 3070";
 
 
+input.addEventListener("input",function(){
 
-input.className=
-"gpu-search";
+searchGPU(input.value);
 
-
-
-input.placeholder=
-"Wpisz np. RTX 3070";
+});
 
 
-
-input.oninput=function(){
-
-searchGPU(
-input.value
-);
-
-};
-
-
-
-area.appendChild(input);
+box.appendChild(input);
 
 
 return;
@@ -333,50 +276,35 @@ return;
 
 
 
-step.options.forEach(option=>{
+q.options.forEach(option=>{
 
 
+let button=document.createElement("button");
 
-let button=
-document.createElement("div");
+button.className="answer";
 
-
-
-button.className=
-"answer";
-
-
-
-button.innerHTML=
-option[1];
-
+button.innerHTML=option[1];
 
 
 
 button.onclick=function(){
 
 
-answers[step.key]
-=
-option[0];
+answers[q.key]=option[0];
 
 
-
-nextStep();
-
+nextQuestion();
 
 
 };
 
 
 
-
-area.appendChild(button);
+box.appendChild(button);
 
 
 
 });
-
 
 
 }
@@ -392,14 +320,15 @@ area.appendChild(button);
 function searchGPU(text){
 
 
-let area=
-document.getElementById("answers");
+let box=document.getElementById("answers");
+
+
+if(!box)
+return;
 
 
 
-let old=
-document.getElementById("gpuResults");
-
+let old=document.getElementById("gpuResults");
 
 
 if(old)
@@ -408,13 +337,22 @@ old.remove();
 
 
 
+let result=document.createElement("div");
 
-let result=
-document.createElement("div");
+result.id="gpuResults";
 
 
-result.id=
-"gpuResults";
+
+
+if(typeof gpuDatabase==="undefined"){
+
+result.innerHTML="Brak bazy GPU";
+
+box.appendChild(result);
+
+return;
+
+}
 
 
 
@@ -423,53 +361,32 @@ result.id=
 gpuDatabase.forEach(card=>{
 
 
-if(
-
-card.name
-.toLowerCase()
-.includes(
-text.toLowerCase()
-)
-
-){
+if(card.name.toLowerCase().includes(text.toLowerCase())){
 
 
+let button=document.createElement("button");
 
-let item=
-document.createElement("div");
+
+button.className="answer";
+
+
+button.innerHTML=card.name;
 
 
 
-item.className=
-"answer";
+button.onclick=function(){
 
 
-
-item.innerHTML=
-card.name;
+answers.gpu=card;
 
 
-
-
-item.onclick=function(){
-
-
-answers.gpu=
-card;
-
-
-
-nextStep();
-
+nextQuestion();
 
 
 };
 
 
-
-
-result.appendChild(item);
-
+result.appendChild(button);
 
 
 }
@@ -480,9 +397,7 @@ result.appendChild(item);
 
 
 
-
-
-area.appendChild(result);
+box.appendChild(result);
 
 
 
@@ -496,31 +411,50 @@ area.appendChild(result);
 
 
 
-
-function nextStep(){
-
+function nextQuestion(){
 
 
-if(currentStep < steps.length-1){
+if(currentStep < questions.length-1){
 
 
 currentStep++;
 
-
-showStep();
-
+showQuestion();
 
 
 }
+
 else{
 
 
-finishCalculator();
-
+showResult();
 
 
 }
 
+
+}
+
+
+
+
+
+
+
+
+
+function previousQuestion(){
+
+
+if(currentStep>0){
+
+
+currentStep--;
+
+showQuestion();
+
+
+}
 
 
 }
@@ -536,33 +470,34 @@ finishCalculator();
 function calculatePrice(){
 
 
+if(!answers.gpu)
+return 0;
 
-let basePrice;
 
 
+
+let price;
+
+
+
+// NOWA / UŻYWANA = CENA MAKSYMALNA
+// USZKODZONA = MINIMALNA
 
 
 if(
-
-answers.state==="newCard"
-
-||
-
+answers.state==="newCard" ||
 answers.state==="usedCard"
-
 ){
 
 
-basePrice=
-answers.gpu.maxPrice;
+price=answers.gpu.maxPrice;
 
 
 }
 else{
 
 
-basePrice=
-answers.gpu.minPrice;
+price=answers.gpu.minPrice;
 
 
 }
@@ -572,57 +507,19 @@ answers.gpu.minPrice;
 
 
 
-let finalPrice=
-basePrice;
-
-
-
-let changes=[];
-
-
-
-
-
-
-function applyRule(rule){
-
+function add(rule){
 
 
 if(
+typeof priceRules!=="undefined" &&
 priceRules[rule]
 ){
 
 
-
-let item=
-priceRules[rule];
-
-
-
-finalPrice +=
-item.value;
-
-
-
-
-if(item.value!==0){
-
-
-changes.push({
-
-name:item.name,
-
-value:item.value
-
-});
+price += priceRules[rule].value;
 
 
 }
-
-
-
-}
-
 
 
 }
@@ -630,61 +527,40 @@ value:item.value
 
 
 
+add(answers.warranty);
 
+add(answers.box);
 
+add(answers.fans);
 
-applyRule(
-answers.warranty
-);
+add(answers.coil);
 
+add(answers.opened);
 
-applyRule(
-answers.box
-);
+add(answers.repaired);
 
+add(answers.artifacts);
 
-applyRule(
-answers.fans
-);
+add(answers.moisture);
 
-
-applyRule(
-answers.coil
-);
-
-
-applyRule(
-answers.service
-);
-
-
-applyRule(
-answers.opened
-);
-
-
-applyRule(
-answers.repaired
-);
-
-
-applyRule(
-answers.artifacts
-);
-
-
-applyRule(
-answers.moisture
-);
+add(answers.service);
 
 
 
 
 
 
-if(finalPrice<0)
+if(price<0)
 
-finalPrice=0;
+price=0;
+
+
+
+return Math.round(price);
+
+
+
+}
 
 
 
@@ -692,195 +568,299 @@ finalPrice=0;
 
 
 
-return{
 
 
-basePrice,
+function showResult(){
 
-changes,
 
-finalPrice
+let finalPrice=calculatePrice();
+
+
+
+hideElement("calculator");
+
+showElement("resultScreen");
+
+
+
+
+
+let price=document.getElementById("priceResult");
+
+
+if(price)
+
+price.innerHTML =
+finalPrice+" zł";
+
+
+
+
+
+let summary=document.getElementById("summaryText");
+
+
+if(summary){
+
+
+summary.innerHTML=
+
+
+`
+<b>${answers.gpu.name}</b>
+
+<br><br>
+
+Proponowana cena odkupu:
+
+<h2>${finalPrice} zł</h2>
+
+
+<p>
+Cena orientacyjna.
+Końcowa cena zależy od rzeczywistego stanu karty.
+</p>
+
+`;
+
+
+}
+
+
+
+
+createEmail(finalPrice);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function createEmail(price){
+
+
+
+let email=document.getElementById("emailButton");
+
+
+if(!email)
+return;
+
+
+
+
+let message = `
+
+WYCENA KARTY GRAFICZNEJ
+
+======================
+
+
+Model:
+
+${answers.gpu.name}
+
+
+
+Proponowana cena:
+
+${price} zł
+
+
+
+======================
+
+INFORMACJE KLIENTA:
+
+
+Stan:
+
+${translate(answers.state)}
+
+
+
+Serwis:
+
+${translate(answers.service)}
+
+
+
+Rozbierana:
+
+${translate(answers.opened)}
+
+
+
+Naprawiana:
+
+${translate(answers.repaired)}
+
+
+
+Czas posiadania:
+
+${translate(answers.age)}
+
+
+
+Artefakty:
+
+${translate(answers.artifacts)}
+
+
+
+Gwarancja:
+
+${translate(answers.warranty)}
+
+
+
+Pudełko:
+
+${translate(answers.box)}
+
+
+
+Wentylatory:
+
+${translate(answers.fans)}
+
+
+
+Cewki:
+
+${translate(answers.coil)}
+
+
+
+Użytkowanie:
+
+${translate(answers.usage)}
+
+
+
+Wilgoć:
+
+${translate(answers.moisture)}
+
+
+
+======================
+
+
+Proszę o kontakt w sprawie odkupu.
+
+
+
+`;
+
+
+
+
+
+email.href =
+
+"mailto:?subject=Wycena GPU&body="
++
+encodeURIComponent(message);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function translate(value){
+
+
+
+let data={
+
+
+newCard:"Nowa",
+
+usedCard:"Używana",
+
+damagedCard:"Uszkodzona",
+
+
+serviceYes:"Tak",
+
+serviceNo:"Nie",
+
+
+openedYes:"Tak",
+
+openedNo:"Nie",
+
+
+repairedYes:"Tak",
+
+repairedNo:"Nie",
+
+
+less1:"Mniej niż rok",
+
+oneThree:"1-3 lata",
+
+moreThree:"Ponad 3 lata",
+
+
+artifactsYes:"Tak",
+
+artifactsNo:"Nie",
+
+
+warrantyYes:"Tak",
+
+warrantyNo:"Nie",
+
+
+boxYes:"Tak",
+
+boxNo:"Nie",
+
+
+fansBad:"Buczą / terkoczą",
+
+fansGood:"Sprawne",
+
+
+coilYes:"Piszczenie cewek",
+
+coilNo:"Brak",
+
+
+gaming:"Granie",
+
+mining:"Kopanie kryptowalut",
+
+work:"Praca",
+
+
+moistureYes:"Tak",
+
+moistureNo:"Nie"
 
 
 };
 
 
 
-}
-
-
-
-
-
-
-
-
-
-function finishCalculator(){
-
-
-
-let result=
-calculatePrice();
-
-
-
-
-
-document
-.getElementById("calculator")
-.classList.add("hidden");
-
-
-
-document
-.getElementById("resultScreen")
-.classList.remove("hidden");
-
-
-
-
-
-
-document
-.getElementById("priceResult")
-.innerHTML=
-
-result.finalPrice
-+
-" zł";
-
-
-
-
-
-
-
-let corrections="";
-
-
-
-result.changes.forEach(c=>{
-
-
-corrections +=
-
-c.name
-+
-": "
-+
-c.value
-+
-" zł<br>";
-
-
-
-});
-
-
-
-
-
-
-
-
-document
-.getElementById("summaryText")
-.innerHTML=
-
-
-`
-
-<b>${answers.gpu.name}</b>
-
-<br><br>
-
-
-Cena bazowa:
-
-${result.basePrice} zł
-
-
-<br><br>
-
-
-Korekty:
-
-<br>
-
-${corrections}
-
-
-<br>
-
-
-<b>Oferta odkupu:
-${result.finalPrice} zł</b>
-
-
-<br><br>
-
-
-Cena orientacyjna.
-Końcowa wycena zależy od realnego stanu karty.
-
-
-`;
-
-
-
-
-
-
-
-
-
-let mailText=
-
-`
-Model:
-${answers.gpu.name}
-
-
-Oferta:
-${result.finalPrice} zł
-
-
-Cena bazowa:
-${result.basePrice} zł
-
-
-`;
-
-
-
-
-
-document
-.getElementById("emailButton")
-.href=
-
-"mailto:"
-+
-config.email
-+
-"?subject=Wycena GPU&body="
-+
-encodeURIComponent(mailText);
-
-
-
-
-
-document
-.getElementById("phoneButton")
-.href=
-
-"tel:"
-+
-config.phone;
-
-
+return data[value] || "Nie podano";
 
 
 }
@@ -893,31 +873,58 @@ config.phone;
 
 
 
-window.addEventListener(
-"load",
-()=>{
+function showElement(id){
 
 
-let loader=
-document.getElementById("loader");
+let e=document.getElementById(id);
 
+
+if(e)
+e.classList.remove("hidden");
+
+
+}
+
+
+
+function hideElement(id){
+
+
+let e=document.getElementById(id);
+
+
+if(e)
+e.classList.add("hidden");
+
+
+}
+
+
+
+
+
+
+
+
+window.addEventListener("load",function(){
+
+
+let loader=document.getElementById("loader");
 
 
 if(loader){
 
 
-setTimeout(()=>{
+setTimeout(function(){
 
 
 loader.style.display="none";
 
 
-},500);
-
+},800);
 
 
 }
-
 
 
 });
